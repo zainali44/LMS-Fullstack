@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+// Define all routers here
 const studentRouter = require('./routes/student')
 
 const app = express();
@@ -22,5 +23,5 @@ app.listen(PORT, async (error) => {
 );
 
 app.use(express.json());
-
+// Define the usage of all routers here
 app.use('/api/student', studentRouter);
