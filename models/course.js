@@ -13,6 +13,14 @@ const courseSchema = new mongoose.Schema({
         type: String, 
         required: true,
     },
+    students: {
+        type: [String],
+        required: false,
+    },
+    teachers: {
+        type: [String],
+        required: false,
+    }
 });
 
 const Course = mongoose.model('Course', courseSchema);

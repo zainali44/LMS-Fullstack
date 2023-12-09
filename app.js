@@ -15,7 +15,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }).then(
 
 app.listen(PORT, async (error) => {
     if (!error)
-        console.log("Server is Successfully Running on " + PORT)
+        console.log("Server is Successfully Running on " + PORT);
     else
         console.warn("Error occurred, server can't start", error);
 }
