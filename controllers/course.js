@@ -22,7 +22,6 @@ const getStudents = async (req, res) => {
     );
     if (course) {
       const students = course.students;
-      console.log(students);
       res.status(200).send(students);
       return;
     }
@@ -31,4 +30,38 @@ const getStudents = async (req, res) => {
   }
 };
 
-module.exports = { addCourse, getStudents };
+const addStudent = async (req, res) => {
+  try {
+    const course = await Course.findOneAndUpdate(
+      { _id: req.params.cid },
+      {
+        $push: {
+          students: req.params.sid,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).send(course);
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+const removeStudent = async (req, res) => {
+  try {
+    const course = await Course.findOneAndUpdate(
+      { _id: req.params.cid },
+      {
+        $pull: {
+          students: req.params.sid,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).send(course);
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+module.exports = { addCourse, getStudents, addStudent, removeStudent };
