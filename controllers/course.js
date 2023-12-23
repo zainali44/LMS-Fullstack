@@ -68,9 +68,28 @@ const removeStudent = async (req, res) => {
   }
 };
 
+const deleteCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const existingCourse = await Course.findById(courseId);
+
+    if (!existingCourse) {
+      res.status(404).send("Course not found");
+      return;
+    }
+    await existingCourse.deleteOne();
+
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   addCourse,
   getStudents,
   addStudent,
   removeStudent,
+  deleteCourse,
 };

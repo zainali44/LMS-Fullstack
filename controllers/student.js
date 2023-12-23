@@ -16,4 +16,14 @@ const addStudent = async (req, res) => {
   }
 };
 
-module.exports = { addStudent };
+const viewStudents = async (req, res, next) => {
+  try {
+    const students = await Student.find();
+    res.status(200).json(students);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = { addStudent, viewStudents };
