@@ -13,6 +13,30 @@ const courseSchema = new mongoose.Schema({
         type: String, 
         required: true,
     },
+    students: {
+        type: [
+            {
+                id: {
+                    type: mongoose.Types.ObjectId,
+                    ref:"Student"
+                },
+                marks: {
+                    type: Number,
+                    ref:"Student"
+                    
+                }
+            }
+        ]
+    },
+    teacher: {
+        type: [
+            {
+                id: {
+                    type: mongoose.Types.ObjectId,
+                    ref:"Teacher"
+            }}
+        ]
+    }
 });
 
 const Course = mongoose.model('Course', courseSchema);

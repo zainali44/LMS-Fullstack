@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+// Define all routers here
 const studentRouter = require('./routes/student')
+const courseRouter = require('./routes/course')
 
 const app = express();
 const PORT = 3000;
@@ -15,12 +17,13 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }).then(
 
 app.listen(PORT, async (error) => {
     if (!error)
-        console.log("Server is Successfully Running on " + PORT)
+        console.log("Server is Successfully Running on " + PORT);
     else
         console.warn("Error occurred, server can't start", error);
 }
 );
 
 app.use(express.json());
-
+// Define the usage of all routers here
 app.use('/api/student', studentRouter);
+app.use('/api/course', courseRouter);
