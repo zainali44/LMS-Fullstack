@@ -1,4 +1,4 @@
-const Course = require( '../models/course' );
+const Course = require("../models/course");
 const getAllCourses = (req,res) =>
 {
     Course.find().then( ( data ) =>
@@ -19,7 +19,7 @@ const addMarks = async (req, res) => {
       {
         $set: {
           "students.$.marks": req.body.marks,
-        },
+          },
       },
       { new: true }
     );
@@ -28,7 +28,96 @@ const addMarks = async (req, res) => {
     console.warn(error);
   }
 };
-module.exports={
-    getAllCourses,
-    addMarks
-}
+
+const addCourse = async (req, res) => {
+  try {
+    const existing = await Course.findOne({ code: req.body.code });
+    if (existing) {
+      res.status(409).send("course  already exists");
+      return;
+    }
+    const course = new Course(req.body);
+    await course.save();
+    res.status(201).send(course);
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+const getStudents = async (req, res) => {
+  try {
+    const course = await Course.findOne({ code: req.params.code }).populate(
+      "students"
+    );
+    if (course) {
+      const students = course.students;
+      res.status(200).send(students);
+      return;
+    }
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+const addStudent = async (req, res) => {
+  try {
+    const course = await Course.findOneAndUpdate(
+      { _id: req.params.cid },
+      {
+        $push: {
+          students: req.params.sid,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).send(course);
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+const removeStudent = async (req, res) => {
+  try {
+    const course = await Course.findOneAndUpdate(
+      { _id: req.params.cid },
+      {
+        $pull: {
+          students: req.params.sid,
+          },
+      },
+      { new: true }
+    );
+    res.status(200).send(course);
+  } catch (error) {
+    console.warn(error);
+  }
+};
+    
+
+const deleteCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const existingCourse = await Course.findById(courseId);
+
+    if (!existingCourse) {
+      res.status(404).send("Course not found");
+      return;
+    }
+    await existingCourse.deleteOne();
+
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = {
+  addCourse,
+  getStudents,
+  addStudent,
+  removeStudent,
+  deleteCourse,
+  getAllCourses,
+  addMarks
+};
