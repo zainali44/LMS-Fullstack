@@ -26,4 +26,14 @@ const viewStudents = async (req, res, next) => {
   }
 };
 
-module.exports = { addStudent, viewStudents };
+const viewStudentsbyRegNo = async (req, res, next) => {
+  try {
+    const student = await Student.findOne({ regNo: req.params.regNo });
+    res.status(200).json(student);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = { addStudent, viewStudents , viewStudentsbyRegNo};
