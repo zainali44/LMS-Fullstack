@@ -116,6 +116,29 @@ const deleteCourse = async (req, res) => {
   }
 };
 
+const viewCourses = async (req, res, next) => {
+  try {
+    const courses = await Course.find();
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const updateCourse = async (req, res, next) => {
+  try {
+    const course = await Course.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(course);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 const updateMarks = (req,res,next) => {
   Course.findOneAndUpdate({_id:req.params.cid, "students.id":req.params.sid},
     {$set:{"students.$.marks":req.body.marks}}).then((result)=>{
@@ -142,6 +165,8 @@ module.exports = {
   addStudent,
   removeStudent,
   deleteCourse,
+  viewCourses,
+  updateCourse,
   getAllCourses,
   addMarks,
   updateMarks,

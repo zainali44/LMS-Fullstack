@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
 
 const studentRouter = require('./routes/student');
 const courseRouter = require('./routes/course');
 const teacherRouter = require('./routes/teacher'); 
 
 const app = express();
+app.use(cors()); // Enable CORS for all routes
 const PORT = 3000;
 const uri = "mongodb+srv://muahmad710:1SvVw4WaY2pTq9aG@cluster0.mnzlvoq.mongodb.net/?retryWrites=true&w=majority"
 
