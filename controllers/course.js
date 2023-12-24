@@ -47,7 +47,7 @@ const addCourse = async (req, res) => {
 const getStudents = async (req, res) => {
   try {
     const course = await Course.findOne({ code: req.params.code }).populate(
-      "students"
+      "students.id"
     );
     if (course) {
       const students = course.students;
@@ -65,7 +65,9 @@ const addStudent = async (req, res) => {
       { _id: req.params.cid },
       {
         $push: {
-          students: req.params.sid,
+          students: {
+            id: req.params.sid,
+          },
         },
       },
       { new: true }
@@ -82,8 +84,10 @@ const removeStudent = async (req, res) => {
       { _id: req.params.cid },
       {
         $pull: {
-          students: req.params.sid,
+          students: {
+            id: req.params.sid,
           },
+        },
       },
       { new: true }
     );
