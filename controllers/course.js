@@ -1,4 +1,33 @@
 const Course = require("../models/course");
+const getAllCourses = (req,res) =>
+{
+    Course.find().then( ( data ) =>
+    {
+        res.json( data );
+    } ).catch( ( err ) =>
+    {
+        res.json( err );
+    })
+};
+const addMarks = async (req, res) => {
+  try {
+    const result = await Course.findOneAndUpdate(
+      {
+        _id: req.params.cid,
+        "students.id": req.params.sid,
+      },
+      {
+        $set: {
+          "students.$.marks": req.body.marks,
+          },
+      },
+      { new: true }
+    );
+    res.status(200).send(result);
+  } catch (error) {
+    console.warn(error);
+  }
+};
 
 const addCourse = async (req, res) => {
   try {
@@ -18,7 +47,7 @@ const addCourse = async (req, res) => {
 const getStudents = async (req, res) => {
   try {
     const course = await Course.findOne({ code: req.params.code }).populate(
-      "students"
+      "students.id"
     );
     if (course) {
       const students = course.students;
@@ -36,7 +65,9 @@ const addStudent = async (req, res) => {
       { _id: req.params.cid },
       {
         $push: {
-          students: req.params.sid,
+          students: {
+            id: req.params.sid,
+          },
         },
       },
       { new: true }
@@ -53,7 +84,9 @@ const removeStudent = async (req, res) => {
       { _id: req.params.cid },
       {
         $pull: {
-          students: req.params.sid,
+          students: {
+            id: req.params.sid,
+          },
         },
       },
       { new: true }
@@ -63,6 +96,7 @@ const removeStudent = async (req, res) => {
     console.warn(error);
   }
 };
+    
 
 const deleteCourse = async (req, res) => {
   try {
@@ -105,6 +139,25 @@ const updateCourse = async (req, res, next) => {
     res.status(500).send("Internal Server Error");
   }
 };
+const updateMarks = (req,res,next) => {
+  Course.findOneAndUpdate({_id:req.params.cid, "students.id":req.params.sid},
+    {$set:{"students.$.marks":req.body.marks}}).then((result)=>{
+      res.json(result)
+    }).catch((err)=>{
+      res.json(err)
+    })
+}
+
+const deleteMarks = (req,res,next)=>{
+  Course.deleteOne({_id:req.params.cid},{$pull:{
+      students:{
+        id: req.params.sid
+      }}}).then((result)=>{
+        res.json(result)
+      }).catch((err)=>{
+        res.json(err)
+      })
+}
 
 module.exports = {
   addCourse,
@@ -114,4 +167,8 @@ module.exports = {
   deleteCourse,
   viewCourses,
   updateCourse,
+  getAllCourses,
+  addMarks,
+  updateMarks,
+  deleteMarks,
 };

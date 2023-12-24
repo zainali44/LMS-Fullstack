@@ -17,6 +17,9 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    marks: {
+        types: Number,
+    }
 });
 
 const Student = mongoose.model('Student', studentSchema);
