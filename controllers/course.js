@@ -116,6 +116,26 @@ const deleteCourse = async (req, res) => {
   }
 };
 
+const updateMarks = (req,res,next) => {
+  Course.findOneAndUpdate({_id:req.params.cid, "students.id":req.params.sid},
+    {$set:{"students.$.marks":req.body.marks}}).then((result)=>{
+      res.json(result)
+    }).catch((err)=>{
+      res.json(err)
+    })
+}
+
+const deleteMarks = (req,res,next)=>{
+  Course.deleteOne({_id:req.params.cid},{$pull:{
+      students:{
+        id: req.params.sid
+      }}}).then((result)=>{
+        res.json(result)
+      }).catch((err)=>{
+        res.json(err)
+      })
+}
+
 module.exports = {
   addCourse,
   getStudents,
@@ -123,5 +143,7 @@ module.exports = {
   removeStudent,
   deleteCourse,
   getAllCourses,
-  addMarks
+  addMarks,
+  updateMarks,
+  deleteMarks,
 };

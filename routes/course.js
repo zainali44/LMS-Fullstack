@@ -10,5 +10,7 @@ router.get("/students/:code", courseCtrl.getStudents);
 router.put("/addStudent/:cid/:sid", courseCtrl.addStudent);
 router.delete("/removeStudent/:cid/:sid", courseCtrl.removeStudent);
 router.delete("/deleteCourse/:id", courseCtrl.deleteCourse);
+router.put("/updateMarks/:cid/:sid", courseCtrl.updateMarks);
+router.delete("/deleteMarks/:cid/:sid", courseCtrl.deleteMarks);
 
 module.exports = router;
