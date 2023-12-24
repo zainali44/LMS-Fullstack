@@ -36,7 +36,7 @@ const viewStudentsbyRegNo = async (req, res, next) => {
   }
 };
 
-exports.updateStudent = async (req, res) => {
+const updateStudent = async (req, res) => {
   try {
       const updatedStudent = await Student.findOneAndUpdate(
           { regNo: req.params.regNo },
@@ -54,4 +54,4 @@ exports.updateStudent = async (req, res) => {
   }
 };
 
-module.exports = { addStudent, viewStudents , viewStudentsbyRegNo};
+module.exports = { addStudent, viewStudents , viewStudentsbyRegNo, updateStudent};
