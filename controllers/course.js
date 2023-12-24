@@ -1,4 +1,33 @@
 const Course = require("../models/course");
+const getAllCourses = (req,res) =>
+{
+    Course.find().then( ( data ) =>
+    {
+        res.json( data );
+    } ).catch( ( err ) =>
+    {
+        res.json( err );
+    })
+};
+const addMarks = async (req, res) => {
+  try {
+    const result = await Course.findOneAndUpdate(
+      {
+        _id: req.params.cid,
+        "students.id": req.params.sid,
+      },
+      {
+        $set: {
+          "students.$.marks": req.body.marks,
+          },
+      },
+      { new: true }
+    );
+    res.status(200).send(result);
+  } catch (error) {
+    console.warn(error);
+  }
+};
 
 const addCourse = async (req, res) => {
   try {
@@ -54,7 +83,7 @@ const removeStudent = async (req, res) => {
       {
         $pull: {
           students: req.params.sid,
-        },
+          },
       },
       { new: true }
     );
@@ -63,6 +92,7 @@ const removeStudent = async (req, res) => {
     console.warn(error);
   }
 };
+    
 
 const deleteCourse = async (req, res) => {
   try {
@@ -88,4 +118,6 @@ module.exports = {
   addStudent,
   removeStudent,
   deleteCourse,
+  getAllCourses,
+  addMarks
 };
