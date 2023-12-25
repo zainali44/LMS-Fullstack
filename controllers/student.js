@@ -1,4 +1,7 @@
 const Student = require("../models/student");
+const Course = require("../models/course");
+const { default: mongoose } = require("mongoose");
+const { ObjectId } = require("mongodb");
 
 const addStudent = async (req, res) => {
   try {
@@ -36,4 +39,40 @@ const viewStudentsbyRegNo = async (req, res, next) => {
   }
 };
 
-module.exports = { addStudent, viewStudents , viewStudentsbyRegNo};
+const updateStudent = async (req, res) => {
+  try {
+    const updatedStudent = await Student.findOneAndUpdate(
+      { regNo: req.params.regNo },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedStudent) {
+      return res.status(404).send("Student not found");
+    }
+
+    res.send(updatedStudent);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+const getAllCoursesOfAStudent = async (req, res) => {
+  const sid = req.params.id;
+  try {
+    const courses = await Course.find({
+      "students": {$elemMatch:{ "id" :  sid }}
+    });
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  addStudent,
+  viewStudents,
+  viewStudentsbyRegNo,
+  updateStudent,
+  getAllCoursesOfAStudent,
+};

@@ -5,5 +5,7 @@ const studentCtrl = require("../controllers/student");
 router.post("/add", studentCtrl.addStudent);
 router.get("/view", studentCtrl.viewStudents);
 router.get("/view/:regNo", studentCtrl.viewStudentsbyRegNo);
+router.put("/update/:regNo", studentCtrl.updateStudent);
+router.get("/getcourses/:id", studentCtrl.getAllCoursesOfAStudent);
 
 module.exports = router;
