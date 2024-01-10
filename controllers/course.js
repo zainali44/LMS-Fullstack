@@ -139,6 +139,7 @@ const updateCourse = async (req, res, next) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 const updateMarks = (req,res,next) => {
   Course.findOneAndUpdate({_id:req.params.cid, "students.id":req.params.sid},
     {$set:{"students.$.marks":req.body.marks}}).then((result)=>{
